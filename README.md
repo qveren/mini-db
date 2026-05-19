@@ -5,25 +5,21 @@ A simple database engine written in C.
 This project is an educational implementation of a small database shell inspired by low-level database systems such as SQLite.
 
 The purpose of the project is to learn:
-
-- systems programming
-- memory management
-- terminal applications
-- command parsing
-- database internals
-- low-level C development
+- Systems programming
+- Memory management
+- Terminal applications
+- Command parsing (REPL)
+- Database internals (compiler & virtual machine)
 
 ---
 
 ## Features
 
 Current functionality:
-
-- interactive REPL shell
-- dynamic input buffer
-- command handling
-- `.exit` meta command
-- input reading using `getline()`
+- **Interactive REPL shell**: continuous read-eval-print loop.
+- **Dynamic input buffer**: safe string reading using `getline()`.
+- **Meta-commands**: support for `.exit` to safely close the session.
+- **SQL Statement Preparation**: skeleton parser for `insert` and `select` commands.
 
 ---
 
@@ -31,12 +27,10 @@ Current functionality:
 
 ```text
 mini-db/
-├── main.c
-├── database.c
-├── database.h
-├── Makefile
-└── README.md
-``` 
+├── main.c          # Program entry point and REPL loop
+├── database.c      # Command parsing and execution logic
+├── database.h      # Structures, enums, and function declarations
+└── README.md       # Project documentationф
 
 Files Description
 File	Description
