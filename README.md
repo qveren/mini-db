@@ -47,24 +47,26 @@ Makefile	Build configuration
 Build
 
 Compile the project:
-
+```bash
 make
-
+```
 The executable file will be created:
-
+```bash
 ./database
+```
 Usage
 
 Run the database shell:
-
+```bash
 ./database
-
+```
 Example session:
-
+```bash
 db > hello
 Unrecognized command 'hello'.
 
 db > .exit
+```
 Meta Commands
 Command	Description
 .exit	Exit the program
