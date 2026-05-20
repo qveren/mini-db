@@ -4,6 +4,14 @@
 #include <stdbool.h>
 #include <string.h>
 
+const uint32_t ID_SIZE = size_of_attribute(Row, id);
+const uint32_t USERNAME_SIZE = size_of_attribute(Row, username);
+const uint32_t EMAIL_SIZE = size_of_attribute(Row, email);
+const uint32_t ID_OFFSET = 0;
+const uint32_t USERNAME_OFFSET = ID_OFFSET + ID_SIZE;
+const uint32_t EMAIL_OFFSET = USERNAME_OFFSET + USERNAME_SIZE;
+const uint32_t ROW_SIZE = ID_SIZE + USERNAME_SIZE + EMAIL_SIZE;
+
 void execute_statement(Statement* statement) 
 {
     switch (statement->type) {
@@ -29,7 +37,10 @@ PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement)
 {
     if (strncmp(input_buffer->buffer, "insert", 6) == 0) {
         statement->type = STATEMENT_INSERT;
-        return PREPARE_SUCCESS;
+        int args_assigned = sscanf(input_buffer->buffer, "insert %d %s %s", &(statement->row_to_insert.id), statement->row_to_insert.username, statement->row_to_insert.email);
+        if (args_assigned < 3) {
+            return PREPARE_SYNTAX_ERROR;
+        }
     }
     if (strcmp(input_buffer->buffer, "select") == 0) {
         statement->type = STATEMENT_SELECT;
