@@ -31,7 +31,7 @@ mini-db/
 ├── database.c      # Command parsing and execution logic
 ├── database.h      # Structures, enums, and function declarations
 └── README.md       # Project documentationф
-
+```
 Files Description
 File	Description
 main.c	Program entry point and REPL loop
