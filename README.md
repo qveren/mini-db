@@ -31,7 +31,7 @@ mini-db/
 ├── database.c      # Command parsing and execution logic
 ├── database.h      # Structures, enums, and function declarations
 └── README.md       # Project documentationф
-```
+
 Files Description
 File	Description
 main.c	Program entry point and REPL loop
@@ -39,7 +39,7 @@ database.c	Database utility functions
 database.h	Structures and function declarations
 Makefile	Build configuration
 Build
-
+```
 Compile the project:
 ```bash
 make
