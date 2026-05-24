@@ -6,7 +6,18 @@
 
 #define COLUMN_USERNAME_SIZE 32
 #define COLUMN_EMAIL_SIZE 255
+#define TABLE_MAX_PAGES 100
 #define size_of_attribute(Struct, Attribute) sizeof(((Struct*)0)->Attribute);
+
+typedef enum {
+    EXECUTE_SUCCESS,
+    EXECUTE_TABLE_FULL
+} ExecuteResult;
+
+typedef struct {
+    uint32_t num_rows;
+    void* pages[TABLE_MAX_PAGES];
+} Table;
 
 typedef struct {
     uint32_t id;
@@ -41,8 +52,16 @@ typedef enum {
     PREPARE_UNRECOGNIZED_STATEMENT
 } PrepareResult;
 
+void free_table(Table* table);
+Table* new_table(void);
+void print_row(Row* row);
+void* row_slot(Table* table, uint32_t row_num);
+void deserialize_row(void* source, Row* destination);
+void serialize_row(Row* source, void* destination);
 PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement);
-void execute_statement(Statement* statement);
+ExecuteResult execute_insert(Statement* statement, Table* table);
+ExecuteResult execute_select(Statement* statement, Table* table);
+ExecuteResult execute_statement(Statement* statement, Table* table);
 MetaCommandResult do_meta_command(InputBuffer* input_buffer);
 void print_prompt();
 ssize_t getline(char **lineptr, size_t *n, FILE *stream);
