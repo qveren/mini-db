@@ -7,7 +7,7 @@
 #define COLUMN_USERNAME_SIZE 32
 #define COLUMN_EMAIL_SIZE 255
 #define TABLE_MAX_PAGES 100
-#define size_of_attribute(Struct, Attribute) sizeof(((Struct*)0)->Attribute);
+#define size_of_attribute(Struct, Attribute) sizeof(((Struct*)0)->Attribute)
 
 typedef enum {
     EXECUTE_SUCCESS,
@@ -62,7 +62,7 @@ PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement)
 ExecuteResult execute_insert(Statement* statement, Table* table);
 ExecuteResult execute_select(Statement* statement, Table* table);
 ExecuteResult execute_statement(Statement* statement, Table* table);
-MetaCommandResult do_meta_command(InputBuffer* input_buffer);
+MetaCommandResult do_meta_command(InputBuffer* input_buffer, Table* table);
 void print_prompt();
 ssize_t getline(char **lineptr, size_t *n, FILE *stream);
 void read_input(InputBuffer* input_buffer);

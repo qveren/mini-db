@@ -27,7 +27,7 @@ Table* new_table(void)
 
 void free_table(Table* table) 
 {
-    for (int i = 0; table->pages[i]; i++) {
+    for (int i = 0; i < TABLE_MAX_PAGES; i++) {
         free(table->pages[i]);
     }
     free(table);
@@ -48,21 +48,21 @@ void* row_slot(Table* table, uint32_t row_num)
     }
     uint32_t row_offset = row_num % ROWS_PER_PAGE;
     uint32_t byte_offset = row_offset * ROW_SIZE;
-    return page + byte_offset;
+    return (char*)page + byte_offset;
 }
 
 void deserialize_row(void* source, Row* destination)
 {
-    memcpy(&(destination->id), source + ID_OFFSET, ID_SIZE);
-    memcpy(&(destination->username), source + USERNAME_OFFSET, USERNAME_SIZE);
-    memcpy(&(destination->email), source + EMAIL_OFFSET, EMAIL_SIZE);
+    memcpy(&(destination->id), (char*)source + ID_OFFSET, ID_SIZE);
+    memcpy(&(destination->username), (char*)source + USERNAME_OFFSET, USERNAME_SIZE);
+    memcpy(&(destination->email), (char*)source + EMAIL_OFFSET, EMAIL_SIZE);
 }
 
 void serialize_row(Row* source, void* destination)
 {
-    memcpy(destination + ID_OFFSET, &(source->id), ID_SIZE);
-    memcpy(destination + USERNAME_OFFSET, &(source->username), USERNAME_SIZE);
-    memcpy(destination + EMAIL_OFFSET, &(source->email), EMAIL_SIZE);
+    memcpy((char*)destination + ID_OFFSET, &(source->id), ID_SIZE);
+    memcpy((char*)destination + USERNAME_OFFSET, &(source->username), USERNAME_SIZE);
+    memcpy((char*)destination + EMAIL_OFFSET, &(source->email), EMAIL_SIZE);
 }
 
 ExecuteResult execute_insert(Statement* statement, Table* table) 
@@ -95,11 +95,14 @@ ExecuteResult execute_statement(Statement* statement, Table* table)
         case (STATEMENT_SELECT):
             return execute_select(statement, table);
     }
+    return EXECUTE_SUCCESS;
 }
 
-MetaCommandResult do_meta_command(InputBuffer* input_buffer) 
+MetaCommandResult do_meta_command(InputBuffer* input_buffer, Table* table) 
 {
     if (strcmp(input_buffer->buffer, ".exit") == 0) {
+        close_input_buffer(input_buffer);
+        free_table(table);
         exit(EXIT_SUCCESS);
     } else {
         return META_COMMAND_UNRECOGNIZED_COMMAND;
