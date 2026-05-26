@@ -9,6 +9,12 @@
 #define TABLE_MAX_PAGES 100
 #define size_of_attribute(Struct, Attribute) sizeof(((Struct*)0)->Attribute)
 
+typedef struct {
+    int file_descriptor;
+    uint32_t file_length;
+    void* pages[TABLE_MAX_PAGES];
+} Pager;
+
 typedef enum {
     EXECUTE_SUCCESS,
     EXECUTE_TABLE_FULL
@@ -16,7 +22,7 @@ typedef enum {
 
 typedef struct {
     uint32_t num_rows;
-    void* pages[TABLE_MAX_PAGES];
+    Pager* pager;
 } Table;
 
 typedef struct {
@@ -54,8 +60,10 @@ typedef enum {
     PREPARE_UNRECOGNIZED_STATEMENT
 } PrepareResult;
 
+void* get_page(Pager* pager, uint32_t page_num);
+Pager* pager_open(const char* filename);
 void free_table(Table* table);
-Table* new_table(void);
+Table* db_open(const char* filename);
 void print_row(Row* row);
 void* row_slot(Table* table, uint32_t row_num);
 void deserialize_row(void* source, Row* destination);
@@ -69,7 +77,7 @@ void print_prompt();
 ssize_t getline(char **lineptr, size_t *n, FILE *stream);
 void read_input(InputBuffer* input_buffer);
 void close_input_buffer(InputBuffer* input_buffer);
-int main(void);
+int main(int argc, char* argv[]);
 
 
 
