@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #ifndef DATABASE
 #define DATABASE
@@ -8,6 +9,8 @@
 #define COLUMN_EMAIL_SIZE 255
 #define TABLE_MAX_PAGES 100
 #define size_of_attribute(Struct, Attribute) sizeof(((Struct*)0)->Attribute)
+
+
 
 typedef struct {
     int file_descriptor;
@@ -60,12 +63,21 @@ typedef enum {
     PREPARE_UNRECOGNIZED_STATEMENT
 } PrepareResult;
 
+typedef struct {
+    Table* table;
+    uint32_t row_num;
+    bool end_of_table;
+} Cursor;
+
+Cursor* table_start(Table* table);
+Cursor* table_end(Table* table);
 void* get_page(Pager* pager, uint32_t page_num);
 Pager* pager_open(const char* filename);
 void free_table(Table* table);
 Table* db_open(const char* filename);
 void print_row(Row* row);
-void* row_slot(Table* table, uint32_t row_num);
+void* cursor_value(Cursor* cursor);
+void cursor_advence(Cursor* cursor);
 void deserialize_row(void* source, Row* destination);
 void serialize_row(Row* source, void* destination);
 PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement);
